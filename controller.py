@@ -12,7 +12,7 @@ class Initial(Resource):
                     {'link': '/find', 'description': 'Find scales wich contains the notes passed as param', 
                      'param': "list of notes", 
                      'example': { 'notes': ['C', 'E', 'G']}},
-                    {'link': '/scales/<note>', 'description': 'Show all the scales with the note passed', 'param': "note", 'example': 'C'},
+                    {'link': '/scales/$note$', 'description': 'Show all the scales with the note passed', 'param': "note", 'example': 'C'},
                     {'link': '/scales-sequence', 
                      'description': 'Return a scale based on a matrix that consist in a group of diferent scales. The scale contains the notes in comun with the scales on the matrix.', 
                      'param': "matrix of scales", 
