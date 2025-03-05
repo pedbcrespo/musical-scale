@@ -9,11 +9,13 @@ class Initial(Resource):
     def get(self):
         return  {'init': 'Hello World',
                 'endpoints':[
-                    {'link': '/find', 'description': 'Find scales wich contains the notes passed as param', 
+                    {'link': '/find', 'description': 'Find scales wich contains the notes passed as param',
+                     'type-requisition':'POST', 
                      'param': "list of notes", 
                      'example': { 'notes': ['C', 'E', 'G']}},
-                    {'link': '/scales/$note$', 'description': 'Show all the scales with the note passed', 'param': "note", 'example': 'C'},
-                    {'link': '/scales-sequence', 
+                    {'link': '/scales/$note$', 'type-requisition':'GET', 'description': 'Show all the scales with the note passed', 'param': "note", 'example': 'C'},
+                    {'link': '/scales-sequence',
+                     'type-requisition':'POST',
                      'description': 'Return a scale based on a matrix that consist in a group of diferent scales. The scale contains the notes in comun with the scales on the matrix.', 
                      'param': "matrix of scales", 
                      'example': {
