@@ -1,4 +1,4 @@
-from scale_engine import allNotes, findScale, seqTempo, generateScale, intersecNotesScales
+from scale_engine import allNotes, findScale, seqTempo, generateScale, intersecNotesScales, getScales
 from config import api
 from flask_restful import Resource
 from flask import request
@@ -59,14 +59,14 @@ class FindScaleByNotes(Resource):
         req = request.get_json()
         if not req or 'notes' not in req:
             return {'error': 'Invalid request, expected JSON with "notes"'}, 400
-        res = findScale(seqTempo, allNotes, req['notes'])
+        res = findScale(req['notes'])
         return {'notes': res[0]}
 
 class GetScales(Resource):
     def get(self, note=None):
         if not note:
             return {'error': 'Note parameter is required'}, 400
-        scales = [generateScale(allNotes, note, seq) for seq in seqTempo]
+        scales = [generateScale(note, seq) for seq in seqTempo]
         return {'scales': scales}
 
 class PostScales(Resource):
@@ -82,15 +82,11 @@ def __calc__(arr):
 
 class MinorScales(Resource):
     def get(self, note):
-        minor = list(filter(lambda seq: __calc__(seq) == 3, seqTempo))
-        scales = [generateScale(allNotes, note, seq)[0] for seq in minor]
-        return {'scales': scales}
+        return {'scales': getScales(note, False)}
     
 class MajorScales(Resource):
     def get(self, note):
-        major = list(filter(lambda seq: __calc__(seq) == 4, seqTempo))
-        scales = [generateScale(allNotes, note, seq)[0] for seq in major]
-        return {'scales': scales}
+        return {'scales': getScales(note)}
 
 api.add_resource(Initial, "/")
 api.add_resource(FindScaleByNotes, "/find")
