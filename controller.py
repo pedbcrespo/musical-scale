@@ -7,7 +7,12 @@ from flask import request
 
 class Initial(Resource):
     def get(self):
-        return  {'init': 'Hello World'}
+        return  {'init': 'Hello World',
+                'endpoints':[
+                    {'link': '/find', 'description': 'Find scales wich contains the notes passed as param', 'param': "list of notes"},
+                    {'link': '/scales/<note>', 'description': 'Show all the scales with the note passed', 'param': "note"},
+                    {'link': '/scales-sequence', 'description': 'Return a scale based on a matrix that consist in a group of diferent scales. The scale contains the notes in comun with the scales on the matrix.', 'param': "note"},
+                ]}
 
 class FindScaleByNotes(Resource):
     def post(self):
