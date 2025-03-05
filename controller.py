@@ -2,29 +2,55 @@ from scale_engine import allNotes, findScale, seqTempo, generateScale, intersecN
 from config import api
 from flask_restful import Resource
 from flask import request
-
+from functools import reduce
 # Request comes with standard: {notes: []}
 
 class Initial(Resource):
     def get(self):
         return  {'init': 'Hello World',
                 'endpoints':[
-                    {'link': '/find', 'description': 'Find scales wich contains the notes passed as param',
-                     'type-requisition':'POST', 
-                     'param': "list of notes", 
-                     'example': { 'notes': ['C', 'E', 'G']}},
-                    {'link': '/scales/$note$', 'type-requisition':'GET', 'description': 'Show all the scales with the note passed', 'param': "note", 'example': 'C'},
-                    {'link': '/scales-sequence',
-                     'type-requisition':'POST',
-                     'description': 'Return a scale based on a matrix that consist in a group of diferent scales. The scale contains the notes in comun with the scales on the matrix.', 
-                     'param': "matrix of scales", 
-                     'example': {
-	                    "matrix":  [
-	                        ["D", "E", "F#", "G", "A", "B", "C#"],
-	                        ["B", "C#", "D", "E", "F#", "G", "A"],
-	                        ["E", "F#", "G", "A", "B", "C", "D"],
-	                        ["A", "B", "C#", "D", "E", "F#", "G#"]
-                        ]}
+                    {
+                        'link': '/find', 'description': 'Find scales wich contains the notes passed as param',
+                        'type-requisition':'POST', 
+                        'param': "list of notes", 
+                        'example': { "notes": ["C", "E", "G"]}
+                    },
+                    {
+                        'link': '/scales/$note$', 
+                        'type-requisition':'GET', 
+                        'description': 'Show all the scales with the note passed', 
+                        'param': "note", 
+                        'example': 'C'
+                    },
+                    {
+                        'link': '/scales-sequence',
+                        'type-requisition':'POST',
+                        'description': 'Return a scale based on a matrix that consist in a group of diferent scales. The scale contains the notes in comun with the scales on the matrix.', 
+                        'param': "matrix of scales", 
+                        'example': 
+                            {
+	                            "matrix":  
+                                    [
+	                                    ["D", "E", "F#", "G", "A", "B", "C#"],
+	                                    ["B", "C#", "D", "E", "F#", "G", "A"],
+	                                    ["E", "F#", "G", "A", "B", "C", "D"],
+	                                    ["A", "B", "C#", "D", "E", "F#", "G#"]
+                                    ]
+                            }
+                    },
+                    {
+                        'link': '/minor-scales/$note$',
+                        'type-requisition':'GET',
+                        'description': 'Return all minor scales started on param note',
+                        'param': 'note',
+                        'example': 'C'
+                    },
+                    {
+                        'link': '/major-scales/$note$',
+                        'type-requisition':'GET',
+                        'description': 'Return all major scales started on param note',
+                        'param': 'note',
+                        'example': 'C'
                     },
                 ]}
 
@@ -51,9 +77,24 @@ class PostScales(Resource):
         res = intersecNotesScales(req['matrix'])
         return {'scale': res}
 
+def __calc__(arr):
+    return reduce(lambda a, b: a+b, arr[:2])
 
+class MinorScales(Resource):
+    def get(self, note):
+        minor = list(filter(lambda seq: __calc__(seq) == 3, seqTempo))
+        scales = [generateScale(allNotes, note, seq)[0] for seq in minor]
+        return {'scales': scales}
+    
+class MajorScales(Resource):
+    def get(self, note):
+        major = list(filter(lambda seq: __calc__(seq) == 4, seqTempo))
+        scales = [generateScale(allNotes, note, seq)[0] for seq in major]
+        return {'scales': scales}
 
 api.add_resource(Initial, "/")
 api.add_resource(FindScaleByNotes, "/find")
 api.add_resource(GetScales, "/scales/<note>")
 api.add_resource(PostScales, "/scales-sequence")
+api.add_resource(MinorScales, "/minor-scales/<note>")
+api.add_resource(MajorScales, "/major-scales/<note>")
