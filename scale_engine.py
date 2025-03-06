@@ -93,6 +93,7 @@ def __calc__(arr):
     return reduce(lambda a, b: a+b, arr[:2])
 
 def getScales(note, isMajor=True):
+	note = convertionNote(note)
 	isMajorSeq = lambda seq: __calc__(seq) == 4
 	isMinorSeq = lambda seq: __calc__(seq) == 3
 	seqs = list(filter(isMajorSeq if isMajor else isMinorSeq, seqTempo))
@@ -108,8 +109,10 @@ seqTempo = list(set(filter(lambda permutation: vefirySeqTempo('C', permutation),
 
 
 if __name__ == '__main__':
-	print(findScale(seqTempo, allNotes, ['B', 'C', 'E', 'F'])[0])
+	# print(findScale(seqTempo, allNotes, ['B', 'C', 'E', 'F'])[0])
 
-	print(len(seqTempo))
-	for scale in seqTempo:
-		print(generateScale('C', scale)[0])
+	# print(len(seqTempo))
+	# for scale in seqTempo:
+	# 	print(generateScale('C', scale)[0])
+
+	print(getScales('Db', False))

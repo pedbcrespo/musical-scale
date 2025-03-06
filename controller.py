@@ -1,4 +1,4 @@
-from scale_engine import allNotes, findScale, seqTempo, generateScale, intersecNotesScales, getScales
+from scale_engine import allNotes, findScale, seqTempo, generateScale, intersecNotesScales, getScales, convertionNote
 from config import api
 from flask_restful import Resource
 from flask import request
@@ -64,6 +64,7 @@ class FindScaleByNotes(Resource):
 
 class GetScales(Resource):
     def get(self, note=None):
+        note = convertionNote(note)
         if not note:
             return {'error': 'Note parameter is required'}, 400
         scales = [generateScale(note, seq) for seq in seqTempo]
