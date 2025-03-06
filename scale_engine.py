@@ -109,10 +109,11 @@ seqTempo = list(set(filter(lambda permutation: vefirySeqTempo('C', permutation),
 
 
 if __name__ == '__main__':
-	# print(findScale(seqTempo, allNotes, ['B', 'C', 'E', 'F'])[0])
+	print(findScale(['B', 'C', 'E', 'F'])[0])
 
-	# print(len(seqTempo))
-	# for scale in seqTempo:
-	# 	print(generateScale('C', scale)[0])
+	print(len(seqTempo))
+	for scale in seqTempo:
+		print(generateScale('C', scale)[0])
 
-	print(getScales('Db', False))
+	for scale in getScales('Db', False):
+		print(scale)
