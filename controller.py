@@ -8,6 +8,7 @@ from functools import reduce
 class Initial(Resource):
     def get(self):
         return  {'init': 'Hello World',
+                 'allNotes': allNotes,
                 'endpoints':[
                     {
                         'link': '/find', 'description': 'Find scales wich contains the notes passed as param',
