@@ -3,6 +3,8 @@ from functools import reduce
 
 allNotes = [ 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B' ]
 
+minorNotes = ['Db', 'Eb', 'Gb', 'Ab', 'Bb']
+
 tempo = { 't': 2, 'ht': 1 }
 
 naturalTempoSeq = [
@@ -66,12 +68,13 @@ def verifyScaleContainNotes(scale, notes):
 	return True
 
 def findScale(notes):
+	convertedNotes = list(map(lambda note: convertionNote(note) if note in minorNotes else note, notes))
 	matrix = []
 	matrixSeq = []
 	for seq in seqTempo:
 		for note in allNotes:
 			scale = generateScale(note, seq)[0]
-			if verifyScaleContainNotes(scale, notes):
+			if verifyScaleContainNotes(scale, convertedNotes):
 				matrix.append(scale)
 				matrixSeq.append(seq)
 	
@@ -93,11 +96,11 @@ def __calc__(arr):
     return reduce(lambda a, b: a+b, arr[:2])
 
 def getScales(note, isMajor=True):
-	note = convertionNote(note)
+	convertedNote = convertionNote(note) if note in minorNotes else note
 	isMajorSeq = lambda seq: __calc__(seq) == 4
 	isMinorSeq = lambda seq: __calc__(seq) == 3
 	seqs = list(filter(isMajorSeq if isMajor else isMinorSeq, seqTempo))
-	scales = [generateScale(note, seq)[0] for seq in seqs]
+	scales = [generateScale(convertedNote, seq)[0] for seq in seqs]
 
 	convertedScales = []
 	for scale in scales:
