@@ -7,7 +7,7 @@ minorNotes = ['Db', 'Eb', 'Gb', 'Ab', 'Bb']
 
 tempo = { 't': 2, 'ht': 1 }
 
-naturalTempoSeq = [
+naturalMajorTempoSeq = [
 	tempo['t'],
 	tempo['t'],
 	tempo['ht'],
@@ -15,6 +15,16 @@ naturalTempoSeq = [
 	tempo['t'],
 	tempo['t'],
 	tempo['ht'],
+]
+
+naturalMinorTempoSeq = [
+	tempo['t'],
+	tempo['ht'],
+	tempo['t'],
+	tempo['t'],
+	tempo['ht'],
+	tempo['t'],
+	tempo['t'],
 ]
 
 notesMinor = {
@@ -68,22 +78,14 @@ def verifyScaleContainNotes(scale, notes):
 	return True
 
 def findScale(notes):
-	convertedNotes = list(map(lambda note: convertionNote(note) if note in minorNotes else note, notes))
-	matrix = []
-	matrixSeq = []
-	for seq in seqTempo:
-		for note in allNotes:
-			scale = generateScale(note, seq)[0]
-			if verifyScaleContainNotes(scale, convertedNotes):
-				matrix.append(scale)
-				matrixSeq.append(seq)
-	
-	finalScale = []
-	for scale in matrix:
-		finalScale += scale
 
-	return list(set(finalScale)), matrixSeq
+	majorNotes = [note for note in notes if 'm' not in note]
+	minorNotes = [note.replace('m', '') for note in notes if 'm' in note]
 
+	majorScales = [generateScale(note, naturalMajorTempoSeq)[0] for note in majorNotes]
+	minorScales = [generateScale(note, naturalMinorTempoSeq)[0] for note in minorNotes]
+
+	return intersecNotesScales(majorScales + minorScales)
 
 
 def convertionNote(note, toMajor=True):
@@ -107,7 +109,7 @@ def getScales(note, isMajor=True):
 		convertedScales.append(list(map(lambda n: convertionNote(n, isMajor), scale)))
 	return convertedScales
 
-permutations = itertools.permutations(naturalTempoSeq)
+permutations = itertools.permutations(naturalMajorTempoSeq)
 seqTempo = list(set(filter(lambda permutation: vefirySeqTempo('C', permutation), permutations)))
 
 
