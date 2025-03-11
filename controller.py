@@ -60,8 +60,7 @@ class FindScaleByNotes(Resource):
         req = request.get_json()
         if not req or 'notes' not in req:
             return {'error': 'Invalid request, expected JSON with "notes"'}, 400
-        res = findScale(req['notes'])
-        return {'notes': res}
+        return findScale(req['notes'])
 
 class GetScales(Resource):
     def get(self, note=None):

@@ -1,4 +1,4 @@
-import itertools
+from itertools import permutations
 from functools import reduce
 
 allNotes = [ 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B' ]
@@ -78,14 +78,29 @@ def verifyScaleContainNotes(scale, notes):
 	return True
 
 def findScale(notes):
-
 	majorNotes = [note for note in notes if 'm' not in note]
 	minorNotes = [note.replace('m', '') for note in notes if 'm' in note]
 
 	majorScales = [generateScale(note, naturalMajorTempoSeq)[0] for note in majorNotes]
 	minorScales = [generateScale(note, naturalMinorTempoSeq)[0] for note in minorNotes]
 
-	return intersecNotesScales(majorScales + minorScales)
+	relationScales = {}
+
+	for note in notes:
+		currentScale = None
+		if 'm' in note:
+			currentScale = list(filter(lambda n: n[0] == note.replace('m', ''), minorScales))[0]
+		else:
+			currentScale = list(filter(lambda n: n[0] == note, majorScales))[0]
+
+		relationScales[note.replace('m', '')] = currentScale
+		
+	result = {
+		'allNotesInterserct': intersecNotesScales(majorScales + minorScales),
+		'relationScales': relationScales
+	}
+
+	return result
 
 
 def convertionNote(note, toMajor=True):
@@ -109,7 +124,7 @@ def getScales(note, isMajor=True):
 		convertedScales.append(list(map(lambda n: convertionNote(n, isMajor), scale)))
 	return convertedScales
 
-permutations = itertools.permutations(naturalMajorTempoSeq)
+permutations = permutations(naturalMajorTempoSeq)
 seqTempo = list(set(filter(lambda permutation: vefirySeqTempo('C', permutation), permutations)))
 
 
