@@ -86,6 +86,8 @@ def findScale(notes):
 
 	relationScales = {}
 
+	allNotes = intersecNotesScales(majorScales + minorScales) if len(majorNotes + minorNotes) > 1 else (majorScales + minorScales)[0]
+
 	for note in notes:
 		currentScale = None
 		if 'm' in note:
@@ -96,7 +98,7 @@ def findScale(notes):
 		relationScales[note.replace('m', '')] = currentScale
 		
 	result = {
-		'allNotesInterserct': intersecNotesScales(majorScales + minorScales),
+		'allNotesInterserct': allNotes,
 		'relationScales': relationScales
 	}
 
